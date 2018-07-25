@@ -14,12 +14,14 @@ namespace ShoppingCartAPI.Database
     {
 
         public CartDbContext(DbContextOptions<CartDbContext> options) : base(options){
-
+            base.Database.EnsureCreated(); 
            
         }
 
-        DbSet<Cart>Carts { get; set; }
-        DbSet<Item>Items { get; set; }
+        public DbSet<Cart>CartItems { get; set; }
+        public DbSet<Item>Items { get; set; }
+
+        
 
     }
 }
