@@ -15,6 +15,7 @@ namespace ShoppingCartAPI.Database
 
         public CartDbContext(DbContextOptions<CartDbContext> options) : base(options){
             base.Database.EnsureCreated(); 
+            
            
         }
 

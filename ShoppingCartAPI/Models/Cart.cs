@@ -18,5 +18,9 @@ namespace ShoppingCartAPI.Models
         public string Date { get; set; }
 
         public ICollection<Item> Items { get; set; }
+
+        public bool Completed { get; set; }
     }
+
+    
 }

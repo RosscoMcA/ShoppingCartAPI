@@ -14,6 +14,10 @@ namespace ShoppingCartAPI.Models
 
         public int Quantity { get; set; }
 
+        public int CartID { get; set; }
+
+        
+
 
     }
 }

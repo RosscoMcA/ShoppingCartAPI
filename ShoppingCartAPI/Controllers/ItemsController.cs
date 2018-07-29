@@ -11,57 +11,57 @@ using ShoppingCartAPI.Models;
 namespace ShoppingCartAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Carts")]
-    public class CartsController : ControllerBase
+    [Route("api/Items")]
+    public class ItemsController : Controller
     {
-        public CartDbContext _context;
+        private readonly CartDbContext _context;
 
-        public CartsController(CartDbContext context)
+        public ItemsController(CartDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Carts
+        // GET: api/Items
         [HttpGet]
-        public IEnumerable<Cart> GetCarts()
+        public IEnumerable<Item> GetItems()
         {
-            return _context.CartItems;
+            return _context.Items;
         }
 
-        // GET: api/Carts/5
+        // GET: api/Items/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCart([FromRoute] int id)
+        public async Task<IActionResult> GetItem([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cart = await _context.CartItems.SingleOrDefaultAsync(m => m.ID == id);
+            var item = await _context.Items.SingleOrDefaultAsync(m => m.ID == id);
 
-            if (cart == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            return Ok(cart);
+            return Ok(item);
         }
 
-        // PUT: api/Carts/5
+        // PUT: api/Items/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCart([FromRoute] int id, [FromBody] Cart cart)
+        public async Task<IActionResult> PutItem([FromRoute] int id, [FromBody] Item item)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != cart.ID)
+            if (id != item.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cart).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace ShoppingCartAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CartExists(id))
+                if (!ItemExists(id))
                 {
                     return NotFound();
                 }
@@ -82,45 +82,55 @@ namespace ShoppingCartAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Carts
+        // POST: api/Items
         [HttpPost]
-        public async Task<IActionResult> PostCart([FromBody]Cart cart)
+        public async Task<IActionResult> PostItem([FromBody] Item item)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.CartItems.Add(cart);
-            _context.SaveChanges();
+            //var cart = _context.CartItems.Find(item.CartID);
 
-            return CreatedAtAction("GetCart", new { id = cart.ID }, cart);
+            
+            else
+            {
+                return NoContent();
+            }
+
+            
+
+            _context.Items.Add(item);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetItem", new { id = item.ID }, item);
         }
 
-        // DELETE: api/Carts/5
+        // DELETE: api/Items/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCart([FromRoute] int id)
+        public async Task<IActionResult> DeleteItem([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cart = await _context.CartItems.SingleOrDefaultAsync(m => m.ID == id);
-            if (cart == null)
+            var item = await _context.Items.SingleOrDefaultAsync(m => m.ID == id);
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.CartItems.Remove(cart);
+            _context.Items.Remove(item);
             await _context.SaveChangesAsync();
 
-            return Ok(cart);
+            return Ok(item);
         }
 
-        private bool CartExists(int id)
+        private bool ItemExists(int id)
         {
-            return _context.CartItems.Any(e => e.ID == id);
+            return _context.Items.Any(e => e.ID == id);
         }
     }
 }
